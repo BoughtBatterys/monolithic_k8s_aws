@@ -1,0 +1,10 @@
+name : deploy order
+
+on:
+  # main이라는 브랜치에 push 또는 pull request가 발생했을 때 파이프라인이 동작 
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
