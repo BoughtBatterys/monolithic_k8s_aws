@@ -13,8 +13,12 @@ on:
 #내부에 job들은 여러개 있을 수 있음      
 jobs:
   build-and-deploy: # job의 이름(build-and-deploy는 내가 지은 이름)
+    
+    #runner
     runs-on: ubuntu-latest # 어떤 환경에서 job이 실행될 것인지(ubuntu-latest, windows-latest, macos-latest)
-
+    steps:
+      - name: Check out github
+        uses: actions/checkout@v2 # github에서 코드를 체크아웃하는 액션
 
   # build-and-push: # job의 이름
   #   runs-on: ubuntu-latest
