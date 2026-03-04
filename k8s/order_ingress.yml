@@ -1,0 +1,31 @@
+# aws NLB -> ingress controller(pod)에 -> ingress > service -> pod
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: order-ingress
+  namespace: lgcns
+  annotations:
+    # kubernetes.io/ingress.class: nginx # nginx ingress controller가 이 Ingress 리소스를 처리하도록 지정
+    # nginx.ingress.kubernetes.io/rewrite-target: /$1 # URL 경로 재작성 설정, 예시에서는 /inspire를 /로 재작성 << 첫번째 prefix(inspire)를 제거해달라는 것
+
+spec:
+  ingressClassName: nginx # nginx ingress controller가 이 Ingress 리소스를 처리하도록 지정
+  rules:
+  - host: server.webstudy.shop  # 레코드로 등록한 도메인 이름
+    http:                       # HTTP 트래픽에 대한 규칙을 정의
+      paths:                    # 여러 경로에 대한 규칙을 정의할 수 있음
+      - path: /          # http://server.webstudy.shop/
+        pathType: Prefix        
+        backend:                # deployment로 인해 실행되고 있는 service를 말함
+          service:              
+            name: order-service # ingress가 order-service와 연결되어 있음을 나타냄
+            port:
+              #targetPort가 아닌 service port를 지정해야 한다. 왜냐하면 ingress가 service로 트래픽을 전달하기 때문이다.
+              number: 80        # order-service의 80번 포트로 트래픽을 전달
+
+  # TLS 설정 예시, 실제 인증서 준비 필요
+  # tls:
+  # - hosts:
+  #   - example.com
+  #   secretName: tls-secret

@@ -1,0 +1,158 @@
+# localhost버전
+# server:
+#   port: 8888
+
+# spring:
+
+#   datasource:
+#     driver-class-name: org.mariadb.jdbc.Driver
+#     url: jdbc:mariadb://localhost:3306/inspire   # 마지막은 DB 이름
+#     username: root
+#     password: 123456789
+
+
+  
+
+#   jpa:
+#     hibernate: 
+#         # create, create-drop, update, none
+#         # 위의 명령어는 서버가 로딩될 때마다 매번 실행되므로, 처음 테이블만 만들고 none으로 바꾸는게 나음
+#         ddl-auto: create #기존 테이블을 그대로 사용하려면 이거 유지해라
+#     # 콘솔출력
+#     show-sql: true     
+#     properties:
+#       hibernate:
+#         # h2
+#         # dialect: org.hibernate.dialect.H2Dialect
+#         # mariadb
+#         dialect: org.hibernate.dialect.MariaDBDialect
+#         format_sql: true
+      
+#   # redis
+#   # docker run -d --name redis-container -p 6379:6379 redis:7.2
+#   # docker run -d --name redis-insight -p 8001:5540 redis/redisinsight:latest
+#   # docker exec -it redis-container(우리가 만든 컨테이너 이름) redis-cli
+#   # 우리가 실행한 docker에 접근하는 명령어
+#   data:
+#     redis:
+#       host: localhost
+#       port: 6379
+#       password: 
+#       timeout: 6000ms
+
+# # 버전에 따라 AI의 추가 위치가 다르다. 
+# # 현재 버전에는 Spring 아래에 추가한다.
+# #   ai:
+# #     openai: 
+# #       model: ${OPEN_AI_MODEL} 
+# #       api:
+# #         key: ${OPEN_AI_KEY}
+# #         url: ${OPEN_AI_URL}
+# # #mybatis settings
+# # mybatis:
+# #   mapper-locations: /mappers/**/*Mapper.xml
+# #   config-location: classpath:/mappers/config/mybatis-config.xml #무조건 classpath: 붙여줘라 아님 에러
+
+# jwt:
+#   secret: ogolgye-super-secret-key-for-jwt-forwebstudy
+
+
+# # openApi:
+# #   servicekey: ${SERVICE_KEY}
+# #   callbackUrl : ${CALLBACKURL}
+# #   dataType : ${TYPE}
+# 
+# docker
+# server: 
+#   forward-headers-strategy: framework
+#   port: 8888
+
+# spring:
+
+#   datasource:
+#     driver-class-name: org.mariadb.jdbc.Driver
+#     url: ${SPRING_DATASOURCE_URL:jdbc:mariadb://localhost:3306/inspire}   # 마지막은 DB 이름
+#     username: ${SPRING_DATASOURCE_USERNAME:root}
+#     password: ${SPRING_DATASOURCE_PASSWORD:123456789}
+
+
+  
+
+#   jpa:
+#     hibernate: 
+#         # create, create-drop, update, none
+#         # 위의 명령어는 서버가 로딩될 때마다 매번 실행되므로, 처음 테이블만 만들고 none으로 바꾸는게 나음
+#         ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:create} #기존 테이블을 그대로 사용하려면 이거 유지해라
+#     # 콘솔출력
+#     show-sql: ${SPRING_JPA_SHOW_SQL:true}     
+#     properties:
+#       hibernate:
+#         # h2
+#         # dialect: org.hibernate.dialect.H2Dialect
+#         # mariadb
+#         dialect: org.hibernate.dialect.MariaDBDialect
+#         format_sql: true
+      
+#   # redis
+#   # docker run -d --name redis-container -p 6379:6379 redis:7.2
+#   # docker run -d --name redis-insight -p 8001:5540 redis/redisinsight:latest
+#   # docker exec -it redis-container(우리가 만든 컨테이너 이름) redis-cli
+#   # 우리가 실행한 docker에 접근하는 명령어
+#   data:
+#     redis:
+#       host: ${SPRING_REDIS_HOST:redis}
+#       port: ${SPRING_REDIS_PORT:6379}
+#       password: 
+#       timeout: 6000ms
+
+# jwt:
+#   secret: ogolgye-super-secret-key-for-jwt-forwebstudy
+
+# aws - ecr image
+server: 
+  forward-headers-strategy: framework
+  port: 8888
+
+spring:
+
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    #${} 외부 변수값은 어디에? gitbub secrets 또는 aws k8s의 secret에 저장해서 관리하는 것이 좋다.
+    url: jdbc:mariadb://${DB_HOST}:3306/inspire?useSSL=true&requireSSL=true   # 마지막은 DB 이름
+    username: ${DB_ADMIN}
+    password: ${DB_PASSWORD}
+
+
+  
+
+  jpa:
+    hibernate: 
+        # create, create-drop, update, none
+        # 위의 명령어는 서버가 로딩될 때마다 매번 실행되므로, 처음 테이블만 만들고 none으로 바꾸는게 나음
+        ddl-auto: create
+    # 콘솔출력
+    show-sql: true
+    properties:
+      hibernate:
+        # h2
+        # dialect: org.hibernate.dialect.H2Dialect
+        # mariadb
+        dialect: org.hibernate.dialect.MariaDBDialect
+        format_sql: true
+      
+  # redis
+  # docker run -d --name redis-container -p 6379:6379 redis:7.2
+  # docker run -d --name redis-insight -p 8001:5540 redis/redisinsight:latest
+  # docker exec -it redis-container(우리가 만든 컨테이너 이름) redis-cli
+  # 우리가 실행한 docker에 접근하는 명령어
+  data:
+    redis:
+      # host 설정은 order_redis.yml의 서비스 이름으로 해주면 된다. 왜냐하면 쿠버네티스가 알아서 서비스 이름을 IP로 바꿔주기 때문
+      host: redis-service # 이래야 service로 redis에 접근할 수 있다.
+      port: 6379
+      password: 
+      timeout: 6000ms
+
+jwt:
+  secret: ogolgye-super-secret-key-for-jwt-forwebstudy
+
