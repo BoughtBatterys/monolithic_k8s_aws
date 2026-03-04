@@ -19,6 +19,11 @@ jobs:
     steps:
       - name: Check out github
         uses: actions/checkout@v2 # github에서 코드를 체크아웃하는 액션
+        
+      - name : install kubectl
+        uses: azure/setup-kubectl@v1 # kubectl 설치 액션
+        with:
+          version: 'latest' # kubectl의 버전(latest, 1.20.0 등)
 
   # build-and-push: # job의 이름
   #   runs-on: ubuntu-latest
