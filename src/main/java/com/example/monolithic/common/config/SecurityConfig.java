@@ -59,7 +59,8 @@ public class SecurityConfig {
             .cors(Customizer.withDefaults()) // 위에 CorsConfigurationSource 메서드(네이밍 룰을 일치하게 만든 메서드)를 자동으로 가져오겠다는 것 아니면 람다 함수로 불러와라
             .authorizeHttpRequests(auth -> auth 
                 .requestMatchers( // String들만 받으므로 주의해라, 또한 버전에 따라서 문법들이 달라진다.                    
-                    "/users/signin"
+                    "/users/signin",
+                    "/health/alive"
                 ).permitAll() // 해당 end pointe들은 Token 없이도 접근 가능하게 해주는 것(무조건 허용)
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // pre-flight
                 //.requestMatchers("").authenticated() // 나중에 인증해야만 동작하는 end point 등록할 예정
