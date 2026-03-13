@@ -1,0 +1,35 @@
+# hpa 작업을 위한 메니피스트 파일
+# kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: orders-backend-hpa
+  namespace: lgcns
+
+spec:
+  scaleTargetRef:           # 어떤 deployment를 autoscaling할 것인지 지정하는 부분
+    apiVersion: apps/v1     # autoscaling할 대상이 deployment이므로 apiVersion은 apps/v1로 지정
+    kind: Deployment        # autoscaling할 대상이 deployment이므로 kind는 Deployment로 지정
+    name: order-deployment  # autoscaling할 deployment의 이름
+  # pod의 개수를 조절하는 부분(deploy의 replica 수와 hpa의 replica 수가 다르면 hpa가 우선된다.)  
+
+  # pod autoscaling을 위한 옵션
+  # minReplicas: 2
+  # maxReplicas: 4
+  # targetCPUUtilizationPercentage: 50 # cpu 사용률이 50%를 넘으면 pod의 개수를 늘리고, 50%보다 낮으면 pod의 개수를 줄이겠다.
+
+  # ec2 autoscaling을 위한 옵션
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 30 # cpu 사용률이 30%를 넘으면 pod의 개수를 늘리고, 30%보다 낮으면 pod의 개수를 줄이겠다.
+
+# hpa 통해서 pod 현황 파악을 하고 싶다면?
+# kubectl get hpa orders-backend-hpa -n lgcns -w  -> -w 옵션을 주면 실시간으로 hpa의 상태를 볼 수 있다. CPU 사용률이 50%를 넘으면 pod의 개수가 늘어나고, 50%보다 낮으면 pod의 개수가 줄어드는 것을 볼 수 있다.
+# cpu가 언노운이라고 나오면 다시 metric 서버를 삭제했다가 다시 설치해보자. 
+# 부하테스트를 위해서 특정 pod에 접근
+# winpty kubectl exec -it pod-name -n namespace-name -- sh
+# apk add --no-cache curl (linux에서 curl 설치하는 명령어)
+# 위의 것이 싫으면 wget으로 실행
+# while true; do curl -s http://order-service/product/list; done
+# 위의 명령어는 부하를 주는 것
