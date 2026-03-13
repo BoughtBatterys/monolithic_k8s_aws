@@ -1,0 +1,21 @@
+# argocd application manifest
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: backend-application
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/BoughtBatterys/monolithic_k8s_aws.git'
+    targetRevision: main
+    path: k8s # argo cd가 k8s 디렉토리 안에 있는 매니피스트 파일들을 보고 배포할 수 있도록 하는 것
+  destination:
+    server: 'https://kubernetes.default.svc' # 클러스터 내부에서 접근할 때는 이렇게 접근한다. 약속된 URL이다.
+    namespace: lgcns # 배포할 네임스페이스
+  
+  syncPolicy:
+    automated: # 자동으로 관리를 해달라
+      prune: true # argo cd가 매니피스트 파일에서 삭제된 리소스는 k8s에서도 삭제해달라는 옵션
+      # 가장 핵심 : 클러스터가 변경이되면 git repo를 기준으로 싱크하는 작업
+      selfHeal: true # 매니피스트 파일과 실제 리소스의 상태가 달라졌을 때, 매니피스트 파일의 상태로 실제 리소스를 변경해달라는 옵션

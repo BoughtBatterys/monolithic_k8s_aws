@@ -1,58 +1,58 @@
-name : deploy msa to k8s
+# name : deploy msa to k8s
 
-on:
-  # main이라는 브랜치에 push 또는 pull request가 발생했을 때 파이프라인이 동작 
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+# on:
+#   # main이라는 브랜치에 push 또는 pull request가 발생했을 때 파이프라인이 동작 
+#   push:
+#     branches:
+#       - main
+#   pull_request:
+#     branches:
+#       - main
 
 
-#내부에 job들은 여러개 있을 수 있음      
-jobs:
-  build-and-deploy: # job의 이름(build-and-deploy는 내가 지은 이름)
+# #내부에 job들은 여러개 있을 수 있음      
+# jobs:
+#   build-and-deploy: # job의 이름(build-and-deploy는 내가 지은 이름)
     
-    #runner
-    runs-on: ubuntu-latest # 어떤 환경에서 job이 실행될 것인지(ubuntu-latest, windows-latest, macos-latest)
-    steps:
-      - name: Check out github
-        # user는 약속되어 있는 명령어를 가져와 사용하는 것
-        uses: actions/checkout@v2 # github에서 코드를 체크아웃하는 액션
+#     #runner
+#     runs-on: ubuntu-latest # 어떤 환경에서 job이 실행될 것인지(ubuntu-latest, windows-latest, macos-latest)
+#     steps:
+#       - name: Check out github
+#         # user는 약속되어 있는 명령어를 가져와 사용하는 것
+#         uses: actions/checkout@v2 # github에서 코드를 체크아웃하는 액션
 
-      # - name : install kubectl
-      #   uses: azure/setup-kubectl@v3 
-      #   with:
-      #     version: 'v1.34.1' # kubectl의 버전
+#       - name : install kubectl
+#         uses: azure/setup-kubectl@v3 
+#         with:
+#           version: 'v1.34.1' # kubectl의 버전
 
-      # - name : aws configure
-      #   uses: aws-actions/configure-aws-credentials@v1
-      #   with:
-      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #     aws-region: us-east-2
+#       - name : aws configure
+#         uses: aws-actions/configure-aws-credentials@v1
+#         with:
+#           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#           aws-region: us-east-2
 
-      # - name: aws eks update kubeconfig
-      #   run: aws eks update-kubeconfig --region us-east-2 --name lgcns-sglim-cluster
+#       - name: aws eks update kubeconfig
+#         run: aws eks update-kubeconfig --region us-east-2 --name lgcns-sglim-cluster
 
-      # - name: aws ecr login
-      #   uses: aws-actions/amazon-ecr-login@v1
+#       - name: aws ecr login
+#         uses: aws-actions/amazon-ecr-login@v1
 
-      # - name : build and push docker image
-      #   env:
-      #     # 사용자 지정 명령어로 기존 명령어와 구분하기 위해서 대문자로 이름을 작성
-      #     REGISTRY: 447839931800.dkr.ecr.us-east-2.amazonaws.com
-      #     REPOSITORY: order-sglim-backend
-      #     IMAGE_TAG: latest
-      #   run: | # 여러 줄의 명령어를 작성할 때는 |를 사용한다.
-      #     docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG -f Dockerfile .
-      #     docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+#       - name : build and push docker image
+#         env:
+#           # 사용자 지정 명령어로 기존 명령어와 구분하기 위해서 대문자로 이름을 작성
+#           REGISTRY: 447839931800.dkr.ecr.us-east-2.amazonaws.com
+#           REPOSITORY: order-sglim-backend
+#           IMAGE_TAG: latest
+#         run: | # 여러 줄의 명령어를 작성할 때는 |를 사용한다.
+#           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG -f Dockerfile .
+#           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
        
-      # - name: kubectl apply
-      #   # apply -f 할 때 k8s에 꼭 필요한 파일만 있다면 k8s directory 전체를 한 번에 apply 가능
-      #   run: | 
-      #     kubectl apply -f k8s/order_redis.yml
-      #     kubectl apply -f k8s/order_deployment.yml
-      #     kubectl apply -f k8s/order_ingress.yml
-      #     kubectl rollout restart deployment order-deployment -n lgcns 
+#       - name: kubectl apply
+#         # apply -f 할 때 k8s에 꼭 필요한 파일만 있다면 k8s directory 전체를 한 번에 apply 가능
+#         run: | 
+#           kubectl apply -f k8s/order_redis.yml
+#           kubectl apply -f k8s/order_deployment.yml
+#           kubectl apply -f k8s/order_ingress.yml
+#           kubectl rollout restart deployment order-deployment -n lgcns 
